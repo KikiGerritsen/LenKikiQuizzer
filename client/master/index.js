@@ -13,6 +13,7 @@ app.controller('masterController', function($scope) {
   $scope.approvedTeams = [];
   $scope.pickedCategories = [];
   $scope.categories = {};
+  $scope.questions = '';
 
   $scope.alert = " ";
 
@@ -125,7 +126,13 @@ app.controller('masterController', function($scope) {
 
   socket.on('All:inquiz', function(data){
     console.log('All:inquiz', data);
-    socket.emit('quiz:questions', $scope.pickedCategories);
+    socket.emit('quiz:questions', {quiz:$scope.currentQuiz, categories:$scope.pickedCategories});
+  });
+
+  socket.on('Quiz:twelveQuestions', function(data){
+    $scope.questions = data;
+    $scope.$apply();
+    console.log("Quiz:twelveQuestions", data);
   });
   /* End In quiz */
   $scope.logout = function(){

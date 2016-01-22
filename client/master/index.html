@@ -34,5 +34,16 @@
 
   <div ng-show="state.inQuiz">
     welcome
+    <table>
+      <tr>
+        <td>Category</td>
+        <td>question</td>
+      </tr>
+      <tr ng-repeat="question in questions">
+        <td>{{question.category}}</td>
+        <td>{{question.question}}</td>
+        <td><button ng-click="pickQuestion(question)">pick</button></td>
+      </td>
+    </table>
   </div>
 </div>

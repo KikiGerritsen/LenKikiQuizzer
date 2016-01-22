@@ -81,10 +81,50 @@ io.sockets.on('connection', function(socket){
   });
 
   socket.on('quiz:questions', function(data){
-    console.log("requested questions from categories:", data);
-    //TODO: Here i am!
-    //Need to get all questions from these categories in this data
+    var availableQuestions = [];
+    for(var i = 0; i < data.categories.length; i++){
+      for(var j = 0; j < questions.length; j++){
+        if(data.categories[i].category === questions[j].category){
+          availableQuestions.push(questions[j]);
+        }
+      }
+    }
+    returnTwelveQuestions(data.quiz.password, availableQuestions);
   });
+
+  var twelveQuestions = [];
+  function returnTwelveQuestions(pwd, q){
+    var randomQuestion = "";
+    if(twelveQuestions.length !== 12){
+      for(var i = 0; i < 12; i++){
+        randomQuestion = q[Math.floor(Math.random() * q.length)];
+        Quiz.findOne({password:pwd}, function(err,quiz){
+          if(err)handleError(err);
+          else {
+            if(quiz.doneQuestions.length === 0){
+              randomQuestion = q[Math.floor(Math.random() * q.length)];
+              twelveQuestions.push(randomQuestion);
+              if(twelveQuestions.length === 12){
+                io.sockets.in(pwd).emit('Quiz:twelveQuestions', twelveQuestions);
+              }
+            } else {
+              for(var j = 0; j < quiz.doneQuestions.length; j++){
+                randomQuestion = q[Math.floor(Math.random() * q.length)];
+                if(quiz.doneQuestions[j] === randomQuestion){
+                  console.log("quiz.doneQuestions[j] === randomQuestion", quiz.doneQuestions[j], randomQuestion);
+                  i--;
+                } else {
+                  console.log("Pushing to twelveQuestions");
+                  randomQuestion = q[Math.floor(Math.random() * q.length)];
+                  twelveQuestions[i].push(randomQuestion);
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+  }
 
   socket.on('quiz:inquiz', function(data){
     console.log('quiz:inQuiz', data);
