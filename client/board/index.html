@@ -1,0 +1,26 @@
+<div id="board">
+  {{title}}
+  <div ng-show="state.setupBoard">
+    go to quiz: <input type='text' ng-model='quiz'></input><button ng-click='goQuiz(quiz)'>Go</button>
+  </div>
+  <div ng-show="state.waitforteams">
+    Round: <br/>
+    Question nr: /12<br/>
+    Current question:
+    <table>
+      <tr>
+        <td>team applied answer</td>
+        <td>teamname:</td>
+        <td>score this round</td>
+        <td>total points</td>
+
+      </tr>
+      <tr ng-repeat="team in teams">
+        <td></td>
+        <td>{{team.teamname}}</td>
+        <td>{{team.score}}</td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+</div>

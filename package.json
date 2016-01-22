@@ -1,0 +1,17 @@
+{
+  "name": "quizzer",
+  "version": "0.0.1",
+  "description": "Quizzer application",
+  "author": "Kiki en Lennard",
+  "main": "app.js",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "~1.5.2",
+    "express": "~4.7.2",
+    "method-override": "~2.1.2",
+    "mongoose": "~3.6.2",
+    "morgan": "~1.2.2",
+    "promise": "^7.1.1",
+    "socket.io": "^1.4.2"
+  }
+}

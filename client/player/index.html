@@ -1,0 +1,20 @@
+<div id="player">
+  {{title}} <a href="/">log out</a><br/>
+  <h1>{{alert}}</h1>
+
+  <div ng-show="state.setTeamname">
+    What's your teamname?<br/>
+    <input type="text" ng-model="teamname"></input><br/>
+    <button ng-click="setATeamname(teamname)">Set teamname</button>
+  </div>
+
+  <div ng-show="state.gotoQuiz">
+      What quiz do you want to join?<br/>
+      <input type="text" ng-model="quizname"></input><br/>
+      <button ng-click="applyForQuiz(quizname)">Apply for quiz</button>
+  </div>
+
+  <div ng-show="state.pendingforquestion">
+    yay
+  </div>
+</div>

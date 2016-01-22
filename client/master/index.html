@@ -1,0 +1,38 @@
+<div id="master">
+  {{title}} <a href="/" ng-click="logout()">log out</a>
+  <h1>{{alert}}</h1>
+
+  <div ng-show="state.setQuiz">
+    What's your quizname?<br/>
+    <input type="text" ng-model="quizname"></input><br/>
+    <button ng-click="makeQuiz(quizname)">Create quiz</button>
+  </div>
+
+  <div ng-show="state.waitingTeams">
+    total applying teams: {{approvedTeams.length}}/6
+    <table>
+      <tr ng-repeat="team in willingteams">
+        <td>{{team.team}}</td>
+        <td><input type="checkbox" ng-model="team.approved"
+                                   ng-change="stateChanged(team)"></input></td>
+      </tr>
+    </table>
+    <button ng-show="state.morethantwoteams" ng-click="goCategories(willingteams)">go to categories</button>
+  </div>
+
+  <div ng-show="state.categories">
+    Pick 3 categories || {{pickedCategories.length}}/3
+    <table>
+      <tr ng-repeat="category in categories">
+        <td>{{category.category}}</td>
+        <td><input type="checkbox" ng-model="category.picked"
+                                   ng-click="stateCatChanged(category)"></input></td>
+      </tr>
+    </table>
+    <button ng-show="state.morethanthreecats" ng-click="goQuiz(pickedCategories)">go to quiz</button>
+  </div>
+
+  <div ng-show="state.inQuiz">
+    welcome
+  </div>
+</div>
