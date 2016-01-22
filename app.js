@@ -80,6 +80,12 @@ io.sockets.on('connection', function(socket){
     getAllCategories(data);
   });
 
+  socket.on('quiz:questions', function(data){
+    console.log("requested questions from categories:", data);
+    //TODO: Here i am!
+    //Need to get all questions from these categories in this data
+  });
+
   socket.on('quiz:inquiz', function(data){
     console.log('quiz:inQuiz', data);
     Quiz.findOne({password:data.password}, function(err, q){

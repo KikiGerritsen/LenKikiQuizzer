@@ -125,6 +125,7 @@ app.controller('masterController', function($scope) {
 
   socket.on('All:inquiz', function(data){
     console.log('All:inquiz', data);
+    socket.emit('quiz:questions', $scope.pickedCategories);
   });
   /* End In quiz */
   $scope.logout = function(){
