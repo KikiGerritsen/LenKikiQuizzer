@@ -5,11 +5,13 @@ app.controller('playerController', function($scope) {
   $scope.state = {
     setTeamname : true,
     gotoQuiz    : false,
-    pendingforquestion : false
+    pendingforquestion : false,
+    question : false
   };
   $scope.alert = '';
   $scope.teamname = '';
   $scope.quiz = '';
+  $scope.question = '';
 
   $scope.title="PLAYER"
   socket.on('connect', function(){
@@ -49,6 +51,19 @@ app.controller('playerController', function($scope) {
   socket.on('All:inquiz', function(data){
     console.log('All:inquiz', data);
   });
+
+  socket.on('question:asked', function(data){
+    console.log(data);
+    $scope.state.question = true;
+    $scope.state.pendingforquestion = false;
+    $scope.question = data.question;
+    $scope.$apply();
+  });
+
+  $scope.playerAnswered = function(data){
+    console.log('answe:',data);
+    socket.emit('player:answered', {quiz:$scope.quiz, answer:data, team:$scope.teamname});
+  }
 
   $scope.setATeamname = function(teamname){
     $scope.teamname = teamname;

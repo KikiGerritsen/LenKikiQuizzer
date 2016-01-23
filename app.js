@@ -81,15 +81,23 @@ io.sockets.on('connection', function(socket){
   });
 
   socket.on('quiz:questions', function(data){
-    var availableQuestions = [];
-    for(var i = 0; i < data.categories.length; i++){
-      for(var j = 0; j < questions.length; j++){
-        if(data.categories[i].category === questions[j].category){
-          availableQuestions.push(questions[j]);
-        }
+    Question.find({}, function(err, q){
+      if(err) handleError(err);
+      else {
+        console.log("YP", q);
+        returnTwelveQuestions(data.quiz.password, q);
       }
-    }
-    returnTwelveQuestions(data.quiz.password, availableQuestions);
+    });
+  });
+
+  socket.on('question:select', function(data){
+    console.log('question:select',data);
+    io.sockets.in(data.quiz.password).emit('question:asked', {question:data.question});
+  });
+
+  socket.on('player:answered', function(data){
+    console.log("player:answered", data);
+    io.sockets.in(data.quiz).emit('player:answeredQuestion', data);
   });
 
   var twelveQuestions = [];

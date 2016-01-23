@@ -46,4 +46,21 @@
       </td>
     </table>
   </div>
+
+  <div ng-show="state.pendingTeams">
+    waiting for teams
+    <table>
+      <tr>
+        <td>answer</td>
+        <td>team</td>
+        <td>approve</td>
+      </tr>
+      <tr ng-repeat="answer in teamsAnswer">
+        <td>{{answer.answer}}</td>
+        <td>{{answer.team}}</td>
+        <td><input type="checkbox" ng-model="points"></input>
+      </tr>
+    </table>
+    <button ng-click="endQuestion(answer)">End question</button>
+  </div>
 </div>

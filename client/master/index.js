@@ -19,6 +19,8 @@ app.controller('masterController', function($scope) {
 
   $scope.currentQuiz = "";
 
+  $scope.teamsAnswer = [];
+
   socket.on('connect', function(){
     console.log("connection established:",$scope.title);
     socket.emit("adduser", {type:$scope.title});
@@ -134,6 +136,26 @@ app.controller('masterController', function($scope) {
     $scope.$apply();
     console.log("Quiz:twelveQuestions", data);
   });
+
+  $scope.pickQuestion = function(data){
+    console.log(data);
+    socket.emit('question:select', {quiz:$scope.currentQuiz, question:data});
+    $scope.state.pendingTeams = true;
+    $scope.state.inQuiz = false;
+    $scope.currentAnswer = data.answer;
+  }
+
+  socket.on('player:answeredQuestion', function(data){
+    console.log('player:answeredQuestion', data);
+    $scope.teamsAnswer.push(data);
+    console.log($scope.teamsAnswer);
+    $scope.$apply();
+  });
+
+  $scope.givePoints = function(data){
+    console.log("givePoints clicked", data, $scope.approvedTeams);
+
+  }
   /* End In quiz */
   $scope.logout = function(){
     socket.emit('switchRoom', {type:"MASTER", quiz:"Lobby", from:$scope.currentQuiz, reason:"logoutMaster"});

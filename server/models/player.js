@@ -10,6 +10,10 @@ var playerSchema = new Schema({
   //             ref: 'Quiz'},
   score    : { type: Number,
              default : 0},
+  totalScore: {type: Number,
+             default : 0},
+  applied  : { type: Boolean,
+             default : false}
   // approved : { type: Boolean,
   //            default : false}
   // createdAt: { type: Date,

@@ -5,22 +5,22 @@
   </div>
   <div ng-show="state.waitforteams">
     Round: <br/>
-    Question nr: /12<br/>
-    Current question:
+    Question nr: {{questionNr}}/12<br/>
+    Current question: {{currentQuestion.question}}<br/>
     <table>
       <tr>
         <td>team applied answer</td>
         <td>teamname:</td>
         <td>score this round</td>
         <td>total points</td>
-
       </tr>
       <tr ng-repeat="team in teams">
-        <td></td>
+        <td>{{team.applied}}</td>
         <td>{{team.teamname}}</td>
         <td>{{team.score}}</td>
         <td></td>
       </tr>
     </table>
+    {{teams}}
   </div>
 </div>
