@@ -62,8 +62,15 @@ app.controller('playerController', function($scope) {
 
   $scope.playerAnswered = function(data){
     console.log('answe:',data);
-    socket.emit('player:answered', {quiz:$scope.quiz, answer:data, team:$scope.teamname});
+    socket.emit('player:answered', {quiz:$scope.quiz, answer:data, team:$scope.teamname, correctAnswer:false});
   }
+
+  socket.on('master:endedQuestion', function(data){
+    console.log('master:endedQuestion', data);
+    $scope.state.question = false;
+    $scope.state.pendingforquestion = true;
+    $scope.$apply();
+  });
 
   $scope.setATeamname = function(teamname){
     $scope.teamname = teamname;

@@ -81,13 +81,27 @@ io.sockets.on('connection', function(socket){
   });
 
   socket.on('quiz:questions', function(data){
-    Question.find({}, function(err, q){
-      if(err) handleError(err);
-      else {
-        console.log("YP", q);
-        returnTwelveQuestions(data.quiz.password, q);
-      }
-    });
+    console.log('quiz:questions', data);
+    var questionsInCats = [];
+    var count = 0;
+    for(var i = 0; i < data.categories.length; i++){
+      Question.find({category:data.categories[i].category}, function(err, q){
+        if(err) handleError(err);
+        else {
+          questionsInCats.push(q);
+          // console.log("YP", q);
+          count ++;
+          console.log(count);
+          console.log("if count === 3");
+          if(count === 3){
+            //Combine the 3 indexes of the questionsInCats array
+            var combiningArrayIndexes = questionsInCats[0].concat(questionsInCats[1]);
+            var combinedArrayIndexes = combiningArrayIndexes.concat(questionsInCats[2]);
+            returnTwelveQuestions(data.quiz.password, combinedArrayIndexes);
+          }
+        }
+      });
+    }
   });
 
   socket.on('question:select', function(data){
@@ -98,6 +112,32 @@ io.sockets.on('connection', function(socket){
   socket.on('player:answered', function(data){
     console.log("player:answered", data);
     io.sockets.in(data.quiz).emit('player:answeredQuestion', data);
+  });
+
+  socket.on('master:awardPoints', function(data){
+    console.log('master:awardPoints', data);
+    Quiz.findOne({password:data.quiz.password}, function(err, quiz){
+      if(err)handleError(err);
+      else {
+        if(quiz.players.length !== 0){
+          for(var i = 0; i < quiz.players.length; i++){
+            for(var j = 0; j < data.all.length; j++){
+              if(data.all[j].team === quiz.players[i].teamname){
+                if(data.all[j].correctAnswer === true){
+                  // console.log("quiz.players[i]", quiz.players[i]);
+                  quiz.players[i].score = quiz.players[i].score + 1;
+                  quiz.save(function(err){
+                    if(err)handleError(err);
+                  });
+                }
+              }
+            }
+          }
+        }
+      }
+      console.log("quiz", quiz);
+      io.sockets.in(quiz.password).emit('master:endedQuestion', quiz);
+    });
   });
 
   var twelveQuestions = [];
@@ -114,18 +154,20 @@ io.sockets.on('connection', function(socket){
               twelveQuestions.push(randomQuestion);
               if(twelveQuestions.length === 12){
                 io.sockets.in(pwd).emit('Quiz:twelveQuestions', twelveQuestions);
+                twelveQuestions = [];
               }
-            } else {
-              for(var j = 0; j < quiz.doneQuestions.length; j++){
+            } else if(quiz.doneQuestions.length !== 0){
+              for(var i = 0; i < quiz.doneQuestions.length; i++){
                 randomQuestion = q[Math.floor(Math.random() * q.length)];
-                if(quiz.doneQuestions[j] === randomQuestion){
-                  console.log("quiz.doneQuestions[j] === randomQuestion", quiz.doneQuestions[j], randomQuestion);
-                  i--;
+                if(randomQuestion._id !== quiz.doneQuestions[i]._id){
+                  twelveQuestions.push(randomQuestion);
                 } else {
-                  console.log("Pushing to twelveQuestions");
-                  randomQuestion = q[Math.floor(Math.random() * q.length)];
-                  twelveQuestions[i].push(randomQuestion);
+                  i--;
                 }
+              }
+              if(twelveQuestions.length === 12){
+                io.sockets.in(pwd).emit('Quiz:twelveQuestions', twelveQuestions);
+                twelveQuestions = [];
               }
             }
           }
@@ -136,7 +178,7 @@ io.sockets.on('connection', function(socket){
 
   socket.on('quiz:inquiz', function(data){
     console.log('quiz:inQuiz', data);
-    Quiz.findOne({password:data.password}, function(err, q){
+    Quiz.findOne({password:data.quiz.password}, function(err, q){
       if(err)handleError(err);
       else {
         q.closed = true;
@@ -144,7 +186,7 @@ io.sockets.on('connection', function(socket){
           if(err) handleError(err);
           else {
             console.log('quiz is now closed for incoming shit');
-            io.sockets.in(data.password).emit('All:inquiz', data);
+            io.sockets.in(data.quiz.password).emit('All:inquiz', data);
           }
         });
       }

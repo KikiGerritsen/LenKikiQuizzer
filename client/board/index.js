@@ -61,6 +61,12 @@
     $scope.$apply();
   });
 
+  socket.on('master:endedQuestion', function(data){
+    console.log('master:endedQuestion', data);
+    $scope.teams = data.players;
+    $scope.$apply();
+  });
+
   $scope.goQuiz = function(quiz){
     $scope.quiz = quiz;
     socket.emit("switchRoom", {type:$scope.title, quiz:quiz});

@@ -14,6 +14,7 @@ app.controller('masterController', function($scope) {
   $scope.pickedCategories = [];
   $scope.categories = {};
   $scope.questions = '';
+  $scope.chosenCategories = [];
 
   $scope.alert = " ";
 
@@ -120,14 +121,15 @@ app.controller('masterController', function($scope) {
 
   /* In quiz*/
   $scope.goQuiz = function(data){
-    console.log("in quiz",data);
+    console.log("goQuiz",data);
     $scope.state.categories = false;
     $scope.state.inQuiz = true;
-    socket.emit('quiz:inquiz', $scope.currentQuiz);
+    socket.emit('quiz:inquiz', {quiz:$scope.currentQuiz, categories:$scope.pickedCategories});
   }
 
   socket.on('All:inquiz', function(data){
     console.log('All:inquiz', data);
+    // $scope.chosenCategories = data.categories;
     socket.emit('quiz:questions', {quiz:$scope.currentQuiz, categories:$scope.pickedCategories});
   });
 
@@ -138,11 +140,12 @@ app.controller('masterController', function($scope) {
   });
 
   $scope.pickQuestion = function(data){
-    console.log(data);
+    console.log('pickQuestion',data);
     socket.emit('question:select', {quiz:$scope.currentQuiz, question:data});
     $scope.state.pendingTeams = true;
     $scope.state.inQuiz = false;
-    $scope.currentAnswer = data.answer;
+    $scope.teamsAnswer = []
+    $scope.currentAnswer = data;
   }
 
   socket.on('player:answeredQuestion', function(data){
@@ -152,10 +155,19 @@ app.controller('masterController', function($scope) {
     $scope.$apply();
   });
 
-  $scope.givePoints = function(data){
-    console.log("givePoints clicked", data, $scope.approvedTeams);
-
+  $scope.endQuestion = function(data){
+    console.log("endQuestion clicked", data);
+    $scope.state.categories = false;
+    $scope.state.inQuiz = true;
+    socket.emit('master:awardPoints', {all:data, question:$scope.currentAnswer, pickedCategories:$scope.pickedCategories, quiz:$scope.currentQuiz});
+    socket.emit('quiz:questions', {quiz:$scope.currentQuiz, categories:$scope.pickedCategories});
   }
+
+  socket.on('master:endedQuestion', function(data){
+    console.log('master:endedQuestion', data);
+    $scope.currentQuiz = data;
+    $scope.$apply();
+  });
   /* End In quiz */
   $scope.logout = function(){
     socket.emit('switchRoom', {type:"MASTER", quiz:"Lobby", from:$scope.currentQuiz, reason:"logoutMaster"});
