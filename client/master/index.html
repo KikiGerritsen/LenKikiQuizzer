@@ -1,68 +1,95 @@
-<div id="master">
-  {{title}} <a href="/" ng-click="logout()">log out</a>
-  <h1>{{alert}}</h1>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Quizzer</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="#">Home</a></li>
+        <li><a href="/" ng-click="logout()">Log out</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container-fluid -->
+</nav>
 
-  <div ng-show="state.setQuiz">
-    What's your quizname?<br/>
-    <input type="text" ng-model="quizname"></input><br/>
-    <button ng-click="makeQuiz(quizname)">Create quiz</button>
-  </div>
+<div class="container">
+  <div class="jumbotron">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{title}}</h3>
+      </div>
+      <div class="panel-body">
+        <div ng-show="state.setQuiz">
+          <p>Set your Quizname</p>
+          <input type="text" class="form-control" ng-model="quizname"></input><br/>
+          <a ng-click="makeQuiz(quizname)" class="btn btn-primary" role="button">Create Quiz</a>
+        </div>
 
-  <div ng-show="state.waitingTeams">
-    total applying teams: {{approvedTeams.length}}/6
-    <table>
-      <tr ng-repeat="team in willingteams">
-        <td>{{team.team}}</td>
-        <td><input type="checkbox" ng-model="team.approved"
-                                   ng-change="stateChanged(team)"></input></td>
-      </tr>
-    </table>
-    <button ng-show="state.morethantwoteams" ng-click="goCategories(willingteams)">go to categories</button>
-  </div>
+        <div ng-show="state.waitingTeams">
+          <p>Total applying teams: {{approvedTeams.length}}/6</p>
+          <table class="table">
+            <tr>
+              <th>Teamname</th>
+              <th>Approve</th>
+            </tr>
+            <tr ng-repeat="team in willingteams">
+              <td>{{team.team}}</td>
+              <td><input type="checkbox" ng-model="team.approved"
+                                         ng-change="stateChanged(team)"></input></td>
+            </tr>
+          </table>
+          <a ng-show="state.morethantwoteams" ng-click="goCategories(willingteams)" class="btn btn-primary" role="button">Pick Categories</a>
+        </div>
 
-  <div ng-show="state.categories">
-    Pick 3 categories || {{pickedCategories.length}}/3
-    <table>
-      <tr ng-repeat="category in categories">
-        <td>{{category.category}}</td>
-        <td><input type="checkbox" ng-model="category.picked"
-                                   ng-click="stateCatChanged(category)"></input></td>
-      </tr>
-    </table>
-    <button ng-show="state.morethanthreecats" ng-click="goQuiz(pickedCategories)">go to quiz</button>
-  </div>
+        <div ng-show="state.categories">
+          <p>Pick 3 categories {{pickedCategories.length}}/3</p>
+          <table class="table">
+            <tr>
+              <th>Category</th>
+              <th></th>
+            </tr>
+            <tr ng-repeat="category in categories">
+              <td>{{category.category}}</td>
+              <td><input type="checkbox" ng-model="category.picked"
+                                         ng-click="stateCatChanged(category)"></input></td>
+            </tr>
+          </table>
+          <a ng-show="state.morethanthreecats" ng-click="goQuiz(pickedCategories)" class="btn btn-primary" role="button">Go to Quiz</a>
+        </div>
 
-  <div ng-show="state.inQuiz">
-    welcome
-    <table>
-      <tr>
-        <td></td>
-        <td>Category</td>
-        <td>question</td>
-      </tr>
-      <tr ng-repeat="question in questions">
-        <td><button ng-click="pickQuestion(question)">pick</button></td>
-        <td>{{question.category}}</td>
-        <td>{{question.question}}</td>
-      </td>
-    </table>
-  </div>
+        <div ng-show="state.inQuiz">
+          <table class="table">
+            <tr>
+              <th></th>
+              <th>Category</th>
+              <th>Question</th>
+            </tr>
+            <tr ng-repeat="question in questions">
 
-  <div ng-show="state.pendingTeams">
-    waiting for teams<br/>
-    Answer: {{currentAnswer.answer}}<br/>
-    <table>
-      <tr>
-        <td>answer</td>
-        <td>team</td>
-        <td>approve</td>
-      </tr>
-      <tr ng-repeat="answer in teamsAnswer">
-        <td>{{answer.answer}}</td>
-        <td>{{answer.team}}</td>
-        <td><input type="checkbox" ng-model="answer.correctAnswer"></input>
-      </tr>
-    </table>
-    <button ng-click="endQuestion(teamsAnswer)">End question</button>
+              <td><a ng-click="pickQuestion(question)" class="btn btn-primary" role="button">Pick</a></td>
+              <td>{{question.category}}</td>
+              <td>{{question.question}}</td>
+            </td>
+          </table>
+        </div>
+
+        <div ng-show="state.pendingTeams">
+          <p>Answer: {{currentAnswer.answer}}</p>
+          <table class="table">
+            <tr>
+              <th>Answer</th>
+              <th>Team</th>
+              <th>Approve</th>
+            </tr>
+            <tr ng-repeat="answer in teamsAnswer">
+              <td>{{answer.answer}}</td>
+              <td>{{answer.team}}</td>
+              <td><input type="checkbox" ng-model="answer.correctAnswer"></input>
+            </tr>
+          </table>
+          <a ng-click="endQuestion(teamsAnswer)" class="btn btn-primary" role="button">End Question</a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

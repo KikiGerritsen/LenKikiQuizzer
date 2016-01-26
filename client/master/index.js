@@ -158,6 +158,7 @@ app.controller('masterController', function($scope) {
 
   $scope.endQuestion = function(data){
     console.log("endQuestion clicked", data);
+    $scope.state.pendingTeams = false;
     $scope.state.categories = false;
     $scope.state.inQuiz = true;
     socket.emit('master:awardPoints', {all:data, question:$scope.currentAnswer, pickedCategories:$scope.pickedCategories, quiz:$scope.currentQuiz});

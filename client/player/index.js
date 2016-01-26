@@ -13,6 +13,12 @@ app.controller('playerController', function($scope) {
   $scope.quiz = '';
   $scope.question = '';
 
+  if($scope.alert !== ''){
+    $scope.state.alert = true;
+  } else {
+    $scope.state.alert = false;
+  }
+
   $scope.title="PLAYER"
   socket.on('connect', function(){
     console.log("connection established:", $scope.title);

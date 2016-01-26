@@ -1,27 +1,52 @@
-<div id="player">
-  {{title}} <a href="/">log out</a><br/>
-  <h1>{{alert}}</h1>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Quizzer</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="#">Home</a></li>
+        <li><a href="/">Log out</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container-fluid -->
+</nav>
+<div class="container">
+  <div class="jumbotron">
 
-  <div ng-show="state.setTeamname">
-    What's your teamname?<br/>
-    <input type="text" ng-model="teamname"></input><br/>
-    <button ng-click="setATeamname(teamname)">Set teamname</button>
-  </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{title}}</h3>
+      </div>
+      <div class="panel-body">
+        <div ng-show="state.alert" class="alert alert-warning" role="alert">
+          <a href="#" class="alert-link">{{alert}}</a>
+        </div>
 
-  <div ng-show="state.gotoQuiz">
-      What quiz do you want to join?<br/>
-      <input type="text" ng-model="quizname"></input><br/>
-      <button ng-click="applyForQuiz(quizname)">Apply for quiz</button>
-  </div>
+        <div ng-show="state.setTeamname">
+          <p>What's your teamname?</p>
+          <input type="text" class="form-control" ng-model="teamname"></input><br/>
+          <a ng-click="setATeamname(teamname)" class="btn btn-primary" role="button">Set Teamname</a>
+        </div>
 
-  <div ng-show="state.pendingforquestion">
-    It's gonna be Legen!! .. Wait for it.. Dary!<br/>
-    Legendary! 
-  </div>
+        <div ng-show="state.gotoQuiz">
+          <p>What quiz do you want to join?</p>
+          <input type="text" class="form-control" ng-model="quizname"></input><br/>
+          <a ng-click="applyForQuiz(quizname)" class="btn btn-primary" role="button">Apply for Quiz</a>
+        </div>
 
-  <div ng-show="state.question">
-    vraag: {{question.question}}<br/>
-    <input type='text' ng-model="playersAnswer"></input><br/>
-    <input type='button' ng-click='playerAnswered(playersAnswer)'>Submit</input>
+        <div ng-show="state.pendingforquestion">
+          <div class="alert alert-warning" role="alert">
+            <p class="alert-link">It's gonna be Legen!! .. Wait for it.. Dary! Legendary!</p>
+          </div>
+        </div>
+
+        <div ng-show="state.question">
+          <p>{{question.question}}</p>
+          <input type='text' class="form-control" ng-model="playersAnswer"></input><br/>
+          <a ng-click='playerAnswered(playersAnswer)' class="btn btn-primary" role="button">Submit</a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

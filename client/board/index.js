@@ -55,10 +55,10 @@
   socket.on('round:next', function(data){
     console.log('round:next', data);
     $scope.teams = data.players.sort(function(a, b){
-      if (a.score > b.score) {
+      if (a.totalScore > b.totalScore) {
         return -1;
       }
-      if (a.score < b.score) {
+      if (a.totalScore < b.totalScore) {
         return 1;
       }
       // a must be equal to b
@@ -73,6 +73,7 @@
         $scope.teams[i].totalScore + 0.1;
       }
     }
+    $scope.$apply();
 
       //create the score
       //The team names with their scores in ‘Round Points’ and the
@@ -102,6 +103,7 @@
   socket.on('master:endedQuestion', function(data){
     console.log('master:endedQuestion', data);
     for(var i = 0; i < $scope.teams.length; i++){
+      $scope.teams[i].applied = false;
       $scope.teams[i].score = $scope.teams[i].score + data.players[i].score;
     }
     if($scope.questionNr === 12){

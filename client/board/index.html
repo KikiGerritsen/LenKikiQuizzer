@@ -1,28 +1,63 @@
-<div id="board">
-  {{title}}
-  <div ng-show="state.setupBoard">
-    go to quiz: <input type='text' ng-model='quiz'></input><button ng-click='goQuiz(quiz)'>Go</button>
-  </div>
-  <div ng-show="state.waitforteams">
-    Round: {{roundNr}}<br/>
-    Question nr: {{questionNr}}/12<br/>
-    Category: {{currentQuestion.category}}<br/>
-    Current question: {{currentQuestion.question}}<br/>
-    <table>
-      <tr>
-        <td>team applied answer</td>
-        <td>teamname:</td>
-        <td>score this round</td>
-        <td>total points</td>
-      </tr>
-      <tr ng-repeat="team in teams">
-        <td>{{team.applied}}</td>
-        <td>{{team.teamname}}</td>
-        <td>{{team.score}}</td>
-        <td>{{team.totalScore}}</td>
-        <td></td>
-      </tr>
-    </table>
-    {{teams}}
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Quizzer</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="#">Home</a></li>
+        <li><a href="/" ng-click="logout()">Log out</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container-fluid -->
+</nav>
+
+<div class="container">
+  <div class="jumbotron">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{title}}</h3>
+      </div>
+      <div class="panel-body">
+        <div ng-show="state.setupBoard">
+          <p>Quiz</p>
+          <input type='text' class="form-control" ng-model='quiz'></input><br/>
+          <a ng-click='goQuiz(quiz)' class="btn btn-primary" role="button">Submit</a>
+        </div>
+        <div ng-show="state.waitforteams">
+          <table class="table">
+            <tr>
+            <th>Round</th><td colspan="3">{{roundNr}}<td>
+            </tr>
+            <tr>
+            <th>Question nr.</th><td colspan="3">{{questionNr}}/12<td>
+            </tr>
+            <tr>
+            <th>Category</th><td colspan="3">{{currentQuestion.category}}<td>
+            </tr>
+            <tr>
+            <th>Question</th><td colspan="3">{{currentQuestion.question}}<td>
+            </tr>
+            <tr>
+              <th>Team applied</th>
+              <th>Teamname</th>
+              <th>Score this Round</th>
+              <th>Total Score</th>
+              <td></td>
+            </tr>
+            <tr ng-repeat="team in teams">
+              <td>
+                <span class="glyphicon glyphicon-ok" ng-show="team.applied"></span>
+                <span class="glyphicon glyphicon-remove" ng-hide="team.applied"></span>
+              </td>
+              <td>{{team.teamname}}</td>
+              <td>{{team.score}}</td>
+              <td>{{team.totalScore}}</td>
+              <td></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

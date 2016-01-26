@@ -89,10 +89,8 @@ io.sockets.on('connection', function(socket){
         if(err) handleError(err);
         else {
           questionsInCats.push(q);
-          // console.log("YP", q);
           count ++;
           console.log(count);
-          console.log("if count === 3");
           if(count === 3){
             //Combine the 3 indexes of the questionsInCats array
             var combiningArrayIndexes = questionsInCats[0].concat(questionsInCats[1]);
@@ -208,16 +206,15 @@ io.sockets.on('connection', function(socket){
       if(err)handleError(err);
       else {
         for(var i = 0; i < data.length; i++){
-          quiz.players[i].score = data[i].score;
+          quiz.players[i].totalScore = quiz.players[i].totalScore + data[i].score;
           quiz.save(function(err){
             if(err)handleError(err);
             else {
+              io.sockets.in(data[0].password).emit('round:next', quiz);
             }
           });
         }
       }
-      console.log("sending round:next",quiz);
-      io.sockets.in(data[0].password).emit('round:next', quiz);
     });
   }
 
