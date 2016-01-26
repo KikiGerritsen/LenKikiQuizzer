@@ -61,8 +61,13 @@ app.controller('playerController', function($scope) {
   });
 
   $scope.playerAnswered = function(data){
+    $scope.alert = "";
     console.log('answe:',data);
-    socket.emit('player:answered', {quiz:$scope.quiz, answer:data, team:$scope.teamname, correctAnswer:false});
+    if(data === undefined || data === ""){
+      $scope.alert = "Answer cannot be empty";
+    } else {
+      socket.emit('player:answered', {quiz:$scope.quiz, answer:data, team:$scope.teamname, correctAnswer:false});
+    }
   }
 
   socket.on('master:endedQuestion', function(data){
@@ -70,6 +75,10 @@ app.controller('playerController', function($scope) {
     $scope.state.question = false;
     $scope.state.pendingforquestion = true;
     $scope.$apply();
+  });
+
+  socket.on('round:next', function(data){
+    console.log('round:next', data);
   });
 
   $scope.setATeamname = function(teamname){

@@ -34,6 +34,7 @@ app.controller('masterController', function($scope) {
 
   /* Player handler */
   socket.on('master:addThisPlayer', function(data){
+    console.log('master:addThisPlayer', data);
     $scope.willingteams.push({team:data.team, approved:false});
     $scope.$apply();
   });
@@ -167,6 +168,10 @@ app.controller('masterController', function($scope) {
     console.log('master:endedQuestion', data);
     $scope.currentQuiz = data;
     $scope.$apply();
+  });
+
+  socket.on('round:next', function(data){
+    console.log('round:next', data);
   });
   /* End In quiz */
   $scope.logout = function(){

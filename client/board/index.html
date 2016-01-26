@@ -4,7 +4,7 @@
     go to quiz: <input type='text' ng-model='quiz'></input><button ng-click='goQuiz(quiz)'>Go</button>
   </div>
   <div ng-show="state.waitforteams">
-    Round: <br/>
+    Round: {{roundNr}}<br/>
     Question nr: {{questionNr}}/12<br/>
     Category: {{currentQuestion.category}}<br/>
     Current question: {{currentQuestion.question}}<br/>
@@ -19,6 +19,7 @@
         <td>{{team.applied}}</td>
         <td>{{team.teamname}}</td>
         <td>{{team.score}}</td>
+        <td>{{team.totalScore}}</td>
         <td></td>
       </tr>
     </table>

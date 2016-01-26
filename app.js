@@ -124,7 +124,7 @@ io.sockets.on('connection', function(socket){
             for(var j = 0; j < data.all.length; j++){
               if(data.all[j].team === quiz.players[i].teamname){
                 if(data.all[j].correctAnswer === true){
-                  // console.log("quiz.players[i]", quiz.players[i]);
+                  console.log("quiz.players[i]", quiz.players[i]);
                   quiz.players[i].score = quiz.players[i].score + 1;
                   quiz.save(function(err){
                     if(err)handleError(err);
@@ -193,10 +193,33 @@ io.sockets.on('connection', function(socket){
     });
   });
 
+  socket.on('question:limitRoundReached', function(data){
+    console.log('question:limitRoundReached', data);
+    giveScore(data);
+  });
+
   socket.on('disconnect', function() {
     console.log('a user disconnected', socket.id);
     socket.leave(socket.room);
   });
+
+  function giveScore(data){
+    Quiz.findOne({password:data[0].password}, function(err, quiz){
+      if(err)handleError(err);
+      else {
+        for(var i = 0; i < data.length; i++){
+          quiz.players[i].score = data[i].score;
+          quiz.save(function(err){
+            if(err)handleError(err);
+            else {
+            }
+          });
+        }
+      }
+      console.log("sending round:next",quiz);
+      io.sockets.in(data[0].password).emit('round:next', quiz);
+    });
+  }
 
   // FIXME: WERKT
   function getAllCategories(){

@@ -10,6 +10,7 @@
   $scope.quiz = "";
   $scope.currentQuestion = "";
   $scope.questionNr = 0;
+  $scope.roundNr = 1;
   $scope.teamApplied = "";
   $scope.teamAnswer = "";
 
@@ -45,9 +46,46 @@
     $scope.currentQuestion = data.question;
     $scope.questionNr ++;
     if($scope.questionNr === 12){
-      socket.emit('question:limitRoundReached');
+      console.log('question:limitRoundReached');
+      socket.emit('question:limitRoundReached', $scope.teams);
     }
     $scope.$apply();
+  });
+
+  socket.on('round:next', function(data){
+    console.log('round:next', data);
+    $scope.teams = data.players.sort(function(a, b){
+      if (a.score > b.score) {
+        return -1;
+      }
+      if (a.score < b.score) {
+        return 1;
+      }
+      // a must be equal to b
+      return 0;
+    });
+    console.log($scope.teams);
+    $scope.teams[0].totalScore + 4;
+    $scope.teams[1].totalScore + 2;
+    if($scope.teams.length > 2){
+      $scope.teams[2].totalScore + 1;
+      for(var i = 3; i < $scope.teams.length; i++){
+        $scope.teams[i].totalScore + 0.1;
+      }
+    }
+
+      //create the score
+      //The team names with their scores in ‘Round Points’ and the
+      //number of correctly answered questions per round.
+
+      //Round Points are awarded like this: After each round of
+      //twelve questions, the team that has the most correct
+      //answers is awarded 4 Round Points (RPs). The next best
+      //team is awarded 2 RPs and the third best team is awarded
+      //1 RP. All other teams are awarded 0.1 RPs for their
+      //effort and company.
+
+    // $scope.teams = data.players;
   });
 
   socket.on('player:answeredQuestion', function(data){
@@ -63,7 +101,14 @@
 
   socket.on('master:endedQuestion', function(data){
     console.log('master:endedQuestion', data);
-    $scope.teams = data.players;
+    for(var i = 0; i < $scope.teams.length; i++){
+      $scope.teams[i].score = $scope.teams[i].score + data.players[i].score;
+    }
+    if($scope.questionNr === 12){
+      socket.emit('quiz:twelveQuestionsAsked', {teams:$scope.teams});
+      $scope.questionNr = 0;
+      $scope.roundNr ++;
+    }
     $scope.$apply();
   });
 
